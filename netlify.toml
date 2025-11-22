@@ -1,9 +1,6 @@
 [build]
-  # Netlify को 'client' फोल्डर के अंदर जाने को कहें
   base    = "client" 
   
-  # बिल्ड कमांड 'client' फोल्डर के अंदर चलाएँ
   command = "npm run build"
   
-  # बिल्ड होने के बाद, 'client' के अंदर बने 'dist' फोल्डर को पब्लिश करें
   publish = "dist"
