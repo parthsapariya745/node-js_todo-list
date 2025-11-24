@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 
-exports.connectDB = () => {
+exports.connectDB = async () => {
   try {
-    mongoose
-      .connect("mongodb://localhost:27017", {
-        dbName: "todo-list",
-      })
-      .then(() => console.log("DB is Connected"))
-      .catch(() => console.log("DB is While Connected"));
+    await mongoose
+      .connect("mongodb://localhost:27017/todo-list")
+      console.log("DB Connected");
   } catch (error) {
     console.log("DB Connection error", error);
   }

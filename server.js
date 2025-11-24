@@ -1,12 +1,14 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const { connectDB } = require("./config/db")
+const router = require("./routes/todoRoute")
+
+dotenv.config()
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-dotenv.config()
+app.use("/app/todos", router)
 
 connectDB()
 
