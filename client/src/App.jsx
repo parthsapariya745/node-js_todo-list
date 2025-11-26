@@ -1,8 +1,34 @@
+import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
 
 const App = () => {
   const [input, setInput] = useState("");
-  // const [todos, setTodo] = useState([]);
+  const [todos, setTodo] = useState([]);
+
+  let handleAdd = async () => {
+    try {
+      const res = await axios.post("http://localhost:5000/app/todos/postData", {
+        task: input
+      })
+      setTodo([...todos, res.data])
+      setInput("")
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  useEffect(() => {
+    let handleGetData = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/app/todos/getAllData")
+        setTodo(res.data.allTodoData)
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+    handleGetData()
+  }, [])
 
   return (
     <div className="min-h-screen w-full bg-zinc-900 flex items-center justify-center p-6">
@@ -17,8 +43,8 @@ const App = () => {
             className="flex-1 px-4 py-2 border border-zinc-600 rounded-xl bg-zinc-700 text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           />
           {/* <button className="px-4 py-2 cursor-pointer bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition">{btn ? "Add" : "Update"}</button> */}
-          <div class="btn flex gap-2">
-            <button className="px-4 py-2 sm:w-auto w-full cursor-pointer bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition">
+          <div className="btn flex gap-2">
+            <button className="px-4 py-2 sm:w-auto w-full cursor-pointer bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition" onClick={handleAdd}>
               Add
             </button>
             <button className="px-4 py-2 sm:w-auto w-full cursor-pointer bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition">
@@ -27,22 +53,25 @@ const App = () => {
           </div>
         </div>
         <ul className="space-y-2">
-          {/* {todos.map((todo, i) => (
-            <li
-              key={i}
-              className="flex items-center justify-between px-4 py-2 border border-zinc-600 rounded-xl bg-zinc-700 hover:bg-zinc-600"
-            >
-              <span className="text-white">{todo}</span>
-              <div className="flex items-center gap-2">
-                <button className="px-3 py-1.5 cursor-pointer text-white text-sm rounded-lg transition bg-blue-600 hover:bg-blue-700">
-                  Edit
-                </button>
-                <button className="px-3 py-1.5 cursor-pointer text-white text-sm rounded-lg transition bg-red-600 hover:bg-red-700">
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))} */}
+          {todos.map((e, i) => {
+            return (
+              <li
+                key={i}
+                value={todos}
+                className="flex items-center justify-between px-4 py-2 border border-zinc-600 rounded-xl bg-zinc-700 hover:bg-zinc-600"
+              >
+                <span className="text-white">{e.task}</span>
+                <div className="flex items-center gap-2">
+                  <button className="px-3 py-1.5 cursor-pointer text-white text-sm rounded-lg transition bg-blue-600 hover:bg-blue-700">
+                    Edit
+                  </button>
+                  <button className="px-3 py-1.5 cursor-pointer text-white text-sm rounded-lg transition bg-red-600 hover:bg-red-700">
+                    Delete
+                  </button>
+                </div>
+              </li>
+            )
+          })}
         </ul>
       </div>
     </div>

@@ -14,7 +14,7 @@ exports.handleGetById = async (req, res) => {
             return res.status(404).json({ success: false, message: "Task not found" })
         }
 
-        res.status(200).json({ success: true, message: "Task added Successfully", todoData })
+        res.status(200).json({ success: true, todoData })
     } catch (error) {
         return res.status(500).json({ success: false, message: "Server Error", error });
     }
