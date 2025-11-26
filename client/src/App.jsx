@@ -11,11 +11,11 @@ const App = () => {
       const res = await axios.post("http://localhost:5000/app/todos/postData", {
         task: input
       })
-      setTodo([...todos, res.data])
-      setInput("")
+      setTodo([...todos, res.data.todoData])
     } catch (error) {
       console.log("error", error);
     }
+    setInput("")
   }
 
   useEffect(() => {
@@ -29,6 +29,15 @@ const App = () => {
     }
     handleGetData()
   }, [])
+
+  let handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/app/todos/deleteData/${id}`)
+      setTodo(todos.filter(j => j._id !== id))
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   return (
     <div className="min-h-screen w-full bg-zinc-900 flex items-center justify-center p-6">
@@ -65,7 +74,7 @@ const App = () => {
                   <button className="px-3 py-1.5 cursor-pointer text-white text-sm rounded-lg transition bg-blue-600 hover:bg-blue-700">
                     Edit
                   </button>
-                  <button className="px-3 py-1.5 cursor-pointer text-white text-sm rounded-lg transition bg-red-600 hover:bg-red-700">
+                  <button className="px-3 py-1.5 cursor-pointer text-white text-sm rounded-lg transition bg-red-600 hover:bg-red-700" onClick={() => handleDelete(e._id)}>
                     Delete
                   </button>
                 </div>
