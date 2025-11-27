@@ -45,9 +45,12 @@ const App = () => {
     }
   };
   
-  let handleSave = (id) => {
+  let handleSave = async (id) => {
     try {
-      axios.put(`http://localhost:5000/app/todos/updateData/${id}`)
+      await axios.put(`http://localhost:5000/app/todos/updateData/${id}`, {
+        task: edit
+      })
+      setTodo(todos.map((e) => e._id === id ? { ...e, task: edit } : e))
       setBtn(true)
       setEdit("")
     } catch (error) {
@@ -57,10 +60,10 @@ const App = () => {
   
   let handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/app/todos/deleteData/${id}`);
-      setTodo(todos.filter((j) => j._id !== id));
+      await axios.delete(`http://localhost:5000/app/todos/deleteData/${id}`)
+      setTodo(todos.filter((j) => j._id !== id))
     } catch (error) {
-      console.log("Don't Delete Todo Data", error);
+      console.log("Don't Delete Todo Data", error)
     }
   };
 
