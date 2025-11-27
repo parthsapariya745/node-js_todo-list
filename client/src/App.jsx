@@ -3,16 +3,16 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 const App = () => {
-  const [todos, setTodo] = useState([])
-  const [input, setInput] = useState("")
-  const [index, setIndex] = useState(null)
-  const [btn, setBtn] = useState(true)
-  const [edit, setEdit] = useState("")
+  const [todos, setTodo] = useState([]);
+  const [input, setInput] = useState("");
+  const [index, setIndex] = useState(null);
+  const [btn, setBtn] = useState(true);
+  const [edit, setEdit] = useState("");
 
   let handleAdd = async () => {
     try {
       const res = await axios.post("http://localhost:5000/app/todos/postData", {
-        task: input
+        task: input,
       });
       setTodo([...todos, res.data.todoData]);
     } catch (error) {
@@ -34,38 +34,47 @@ const App = () => {
     };
     handleGetData();
   }, []);
-  
+
   let handleEdit = async (id, task) => {
     try {
-      setIndex(id)
-      setBtn(false)
-      setEdit(task)
+      setIndex(id);
+      setBtn(false);
+      setEdit(task);
     } catch (error) {
       console.log("Don't Edit Todo Data", error);
     }
   };
-  
+
   let handleSave = async (id) => {
     try {
       await axios.put(`http://localhost:5000/app/todos/updateData/${id}`, {
-        task: edit
-      })
-      setTodo(todos.map((e) => e._id === id ? { ...e, task: edit } : e))
-      setBtn(true)
-      setEdit("")
+        task: edit,
+      });
+      setTodo(todos.map((e) => (e._id === id ? { ...e, task: edit } : e)));
+      setBtn(true);
+      setEdit("");
     } catch (error) {
       console.log("Don't Save Todo Data", error);
     }
   };
-  
+
   let handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/app/todos/deleteData/${id}`)
-      setTodo(todos.filter((j) => j._id !== id))
+      await axios.delete(`http://localhost:5000/app/todos/deleteData/${id}`);
+      setTodo(todos.filter((j) => j._id !== id));
     } catch (error) {
-      console.log("Don't Delete Todo Data", error)
+      console.log("Don't Delete Todo Data", error);
     }
   };
+
+  let handleClearAll = async () => {
+    try {
+      await axios.delete('http://localhost:5000/app/todos/deleteAllData')
+      setTodo([])
+    } catch (error) {
+      console.log("Don't Clear All Todo Data", error);
+    }
+  }
 
   return (
     <div className="min-h-screen w-full bg-zinc-900 flex items-center justify-center p-6">
@@ -88,7 +97,10 @@ const App = () => {
             >
               Add
             </button>
-            <button className="px-4 py-2 sm:w-auto w-full cursor-pointer bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition">
+            <button
+              className="px-4 py-2 sm:w-auto w-full cursor-pointer bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition"
+              onClick={handleClearAll}
+            >
               Clear All
             </button>
           </div>
@@ -98,21 +110,23 @@ const App = () => {
             return (
               <li
                 key={i}
-                className='flex items-center gap-2 justify-between rounded-xl px-4 py-2.5'
+                className="flex items-center gap-2 justify-between rounded-xl px-4 py-2.5"
               >
                 {e._id === index && !btn ? (
                   <input
-                  type="text"
-                  onChange={(e) => setEdit(e.target.value)}
-                  value={edit}
-                  className="flex-1 px-4 py-1.5 border border-zinc-600 rounded-[7px] text-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
+                    type="text"
+                    onChange={(e) => setEdit(e.target.value)}
+                    value={edit}
+                    className="flex-1 px-4 py-1.5 border border-zinc-600 rounded-[7px] text-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
                   />
                 ) : (
                   <span className="text-white">{e.task}</span>
                 )}
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => !btn ? handleSave(e._id) : handleEdit(e._id, e.task)}
+                    onClick={() =>
+                      !btn ? handleSave(e._id) : handleEdit(e._id, e.task)
+                    }
                     className={`${
                       e._id === index && !btn
                         ? "bg-green-600 hover:bg-green-700"

@@ -77,3 +77,12 @@ exports.handleDelete = async (req, res) => {
         return res.status(500).json({ success: false, message: "Server Error", error });
     }
 }
+
+exports.handleAllDelete = async (req, res) => {
+    try {
+        await Todo.deleteMany({})
+        res.status(200).json({ success: true, message: "Clear All" })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Server Error", error });
+    }
+}
