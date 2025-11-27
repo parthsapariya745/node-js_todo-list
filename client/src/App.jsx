@@ -34,16 +34,7 @@ const App = () => {
     };
     handleGetData();
   }, []);
-
-  let handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/app/todos/deleteData/${id}`);
-      setTodo(todos.filter((j) => j._id !== id));
-    } catch (error) {
-      console.log("Don't Delete Todo Data", error);
-    }
-  };
-
+  
   let handleEdit = async (id, task) => {
     try {
       setIndex(id)
@@ -53,14 +44,23 @@ const App = () => {
       console.log("Don't Edit Todo Data", error);
     }
   };
-
-  let handleSave = async (id) => {
+  
+  let handleSave = (id) => {
     try {
+      axios.put(`http://localhost:5000/app/todos/updateData/${id}`)
       setBtn(true)
-      console.log(id)
-      setEdit(edit)
+      setEdit("")
     } catch (error) {
       console.log("Don't Save Todo Data", error);
+    }
+  };
+  
+  let handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/app/todos/deleteData/${id}`);
+      setTodo(todos.filter((j) => j._id !== id));
+    } catch (error) {
+      console.log("Don't Delete Todo Data", error);
     }
   };
 
@@ -78,7 +78,6 @@ const App = () => {
             onChange={(e) => setInput(e.target.value)}
             className="flex-1 px-4 py-2 border border-zinc-600 rounded-xl bg-zinc-700 text-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
           />
-          {/* <button className="px-4 py-2 cursor-pointer bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition">{btn ? "Add" : "Update"}</button> */}
           <div className="btn flex gap-2">
             <button
               className="px-4 py-2 sm:w-auto w-full cursor-pointer bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
